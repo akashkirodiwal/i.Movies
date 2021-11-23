@@ -8,8 +8,7 @@ from .forms import UserRegisterForm
 
 def home(request):
     return render(request, 'users_profile/home.html')
-def login(request):
-    return render(request, 'users_profile/login.html')
+
 
 def register(request):
     if request.method=="POST":
@@ -18,7 +17,7 @@ def register(request):
             form.save()
             username=form.cleaned_data.get('username')
             messages.success(request,f'Account Created for {username}')
-            return redirect('booking-home')
+            return redirect('login')
             
     else:
         form=UserRegisterForm()

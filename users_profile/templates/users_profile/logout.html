@@ -1,3 +1,4 @@
+{% load crispy_forms_tags %}
 <!DOCTYPE html>   
 <html>   
 <head>  
@@ -43,33 +44,18 @@ button {
         background-color: lightblue;  
     }   
 </style>   
-</head> 
-<body>
-    <div class="col-md-8">
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
+</head>    
+<body>    
+    <center> <h1> Welcome to LTI Movies </h1> </center>  
+        <h2>
+            You have been Logged Out!!
+        </h2>
+        <div class='border-top pt-3'>
+            <small class="text-muted"?>
+            <button><a  href="{% url 'login' %}">Login Again</a></button>
+            </small>
         </div>
-        {% endfor %}
-    {% endif %} 
-    </div>
-    <h1>
-        <center>
-            Welcome to Movies
-        </center>
-    </h1>
-    </div>
-    {%if user.is_authenticated%}
-    <div class="navbar-nav">
-        
-            <button><a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a></button>
-        {%else%}
-            <button><a class="nav-item nav-link" href="{% url 'login' %}">Login</a></button>
-            <button><a class="nav-item nav-link" href="{% url 'register' %}">Register</a></button>
-        {%endif%}
-    </div>
+    
 
-
-
-</body>
+</body>     
+</html> 
