@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 class UserRegisterForm(UserCreationForm):
     email=forms.EmailField()
-    Age=forms.IntegerField(min_value=12)
+    Age=forms.IntegerField(min_value=12,max_value=80)
     
     class Meta:
         model = User
