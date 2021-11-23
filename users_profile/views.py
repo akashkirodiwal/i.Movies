@@ -23,3 +23,5 @@ def register(request):
         form=UserRegisterForm()
     return render(request,'users_profile/register.html',{'form':form})
 
+def profile(request):
+    return render(request,'users_profile/profile.html')
