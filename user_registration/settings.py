@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'movies.apps.MoviesConfig',
     'users_profile.apps.UsersProfileConfig',
     'crispy_forms',
     'django.contrib.admin',
@@ -127,3 +128,5 @@ CRISPY_TEMPLATE_PACK='bootstrap4'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL='booking-home'
+
+LOGIN_URL='login'

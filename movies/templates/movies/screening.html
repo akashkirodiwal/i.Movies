@@ -1,0 +1,27 @@
+{% extends "movies/base.html" %}
+{% block content %}
+    {% for screen in screening %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              
+              <small class="text-muted">Movie: {{ screen.movie_id }}</small>
+            </div>
+            <p class="article-content">Available Seats: {{ screen.available_seats }}</p>
+            <p class="article-content">Theatre: {{ screen.theatre_id }}</p>
+            <p class="article-content">Price: ₹{{ screen.price }}/- per seat</p>
+            
+            <form>Number of Seats Required:
+              <input type="number" min="1" max={{ screen.available_seats }} step="1"></input>
+
+              <button>Book Now</button>
+              
+
+              </output>
+            </form>
+
+            
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

@@ -47,7 +47,15 @@ button {
 </head>    
 <body>    
     <center> <h1> Welcome to LTI Movies </h1> </center>  
-    
+    <div class="col-md-8">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %} 
+        </div>
     <div class="content-section">
         <form method="POST">
             {% csrf_token %}

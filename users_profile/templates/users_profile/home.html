@@ -1,3 +1,5 @@
+{% extends "movies/base.html" %}
+
 <!DOCTYPE html>   
 <html>   
 <head>  
@@ -45,29 +47,24 @@ button {
 </style>   
 </head> 
 <body>
-    <div class="col-md-8">
-    {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-        {% endfor %}
-    {% endif %} 
-    </div>
+    
     <h1>
         <center>
             Welcome to Movies
         </center>
     </h1>
     </div>
+    {% block content %}
     {%if user.is_authenticated%}
     <div class="navbar-nav">
+            <a class="nav-item nav-link" href="{% url 'mov_booking' %}">Click to view available Movies</a>
             <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
             <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
         {%else%}
             <button><a class="nav-item nav-link" href="{% url 'login' %}">Login</a></button>
             <button><a class="nav-item nav-link" href="{% url 'register' %}">Register</a></button>
         {%endif%}
+        {% endblock content %}
     </div>
 
 

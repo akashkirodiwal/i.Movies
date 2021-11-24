@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from users_profile import views as user_views
+from movies import views as mov_views
 from django.contrib.auth import views as auth_views
 
 
@@ -26,4 +27,6 @@ urlpatterns = [
     path('login/',auth_views.LoginView.as_view(template_name='users_profile/login.html'),name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='users_profile/logout.html'),name='logout'),
     path('register/',user_views.register,name='register'),
+    path('booking/',mov_views.booking,name='mov_booking'),
+    path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening')
     ]
