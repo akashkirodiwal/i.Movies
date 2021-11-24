@@ -6,4 +6,5 @@ from movies import views as movies_views
 urlpatterns = [
     path('', movies_views.booking, name='booking'),
     url(r'^screening/(?P<movie_title>.+?)/$', movies_views.movie_selected, name='screening'),
+    url(r'^booked/(?P<screen_pk>.+?)/$', movies_views.ticket_booked, name='finalbook'),
 ]

@@ -28,5 +28,6 @@ urlpatterns = [
     path('logout/',auth_views.LogoutView.as_view(template_name='users_profile/logout.html'),name='logout'),
     path('register/',user_views.register,name='register'),
     path('booking/',mov_views.booking,name='mov_booking'),
-    path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening')
+    path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening'),
+    path(r'^booked/(?P<screen_pk>.+?)/$', mov_views.ticket_booked, name='finalbook'),
     ]
