@@ -8,7 +8,7 @@
         </div>
         <h2>
             Title: {{ ticket.screening.movie_id.title }}</h2>
-        <p class="article-content">Cost: ₹{{ ticket.screening.cost }}/-</p>
+        <p class="article-content">Cost: ₹{{ ticket.screening.price }}/- per seat </p>
           <form action="{% url 'done_cancellation' ticket.pk %}" method="POST">
               {%csrf_token%}
               <label>Number of Seats Required:</label>
