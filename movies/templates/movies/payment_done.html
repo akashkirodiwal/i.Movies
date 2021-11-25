@@ -1,0 +1,14 @@
+{% extends "movies/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="col-md-8">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %} 
+    </div>
+    <a href="{% url 'profile'%}" class="btn btn-primary">Click Here to view Booking History</a>
+{% endblock content %}

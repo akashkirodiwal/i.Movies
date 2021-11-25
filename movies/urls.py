@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^screening/(?P<movie_title>.+?)/$', movies_views.movie_selected, name='screening'),
     url(r'^booked/(?P<screen_pk>.+?)/$', movies_views.ticket_booked, name='finalbook'),
     path('booked_history/',movies_views.booked_history,name='book_history'),
+    path('payment_done/',movies_views.payment_status,name='payment_status')
 ]

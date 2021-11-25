@@ -1,5 +1,7 @@
-<!DOCTYPE html>
-<html>
+{% extends "movies/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+   
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,4 +17,4 @@
 		<button type="submit">Submit</button>
 	</form>
 </body>
-</html>
+{% endblock content %}

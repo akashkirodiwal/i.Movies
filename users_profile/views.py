@@ -54,7 +54,7 @@ def validate_otp(request):
         us.is_active=True
         us.save()
         messages.success(request,f'Account Created for {username}')
-        return redirect('booking-home')
+        return redirect('login')
     else:
         us.delete()
         messages.success(request,"OTP not matching TRY AGAIN")
