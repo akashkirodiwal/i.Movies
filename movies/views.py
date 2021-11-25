@@ -41,4 +41,23 @@ def booked_history(request):
     return render(request,'users_profile/profile.html',context)
 
 
+def cancel(request, ticket_pk):
+    context = {'ticket': Ticket.objects.filter(pk=ticket_pk).first()}
+    return render(request, 'movies/cancel.html', context)
+
+
+def done_cancellation(request, ticket_pk):
+    if request.method == 'POST':
+        tickets_cancel = request.POST['ticket_cancel']
+        current_user = request.user
+        user = User.objects.filter(username=current_user).first()
+        ticket = Ticket.objects.filter(pk=ticket_pk).first()
+        ticket.no_of_seats -= int(tickets_cancel)
+        ticket.screening.available_seats += int(tickets_cancel)
+        ticket.screening.save()
+        ticket.save()
+        if ticket.no_of_seats == 0:
+            ticket.delete()
+        context = {'tickets': Ticket.objects.filter(user=user)}
+    return render(request, 'users_profile/profile.html', context)
 

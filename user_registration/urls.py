@@ -30,4 +30,6 @@ urlpatterns = [
     path('booking/',mov_views.booking,name='mov_booking'),
     path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening'),
     path(r'^booked/(?P<screen_pk>.+?)/$', mov_views.ticket_booked, name='finalbook'),
+    path(r'^cancel/(?P<ticket_pk>.+?)/$', mov_views.cancel, name='cancel'),
+    path(r'^done_cancellation/(?P<ticket_pk>.+?)/$', mov_views.done_cancellation, name='done_cancellation'),
     ]

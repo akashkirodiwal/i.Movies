@@ -28,4 +28,7 @@ def register(request):
 def profile(request):
     current_user = request.user
     context = {'tickets': Ticket.objects.filter(user=current_user)}
+    for ticket in Ticket.objects.filter(user=current_user):
+        if ticket.no_of_seats == 0:
+            ticket.delete()
     return render(request,'users_profile/profile.html', context)
