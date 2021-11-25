@@ -8,11 +8,13 @@ class Movie(models.Model):
     
     rating_choice = (
         ('U', 'U'),
-        ('UA', 'U/A'),
+        ('UA', 'UA'),
         ('A', 'A'),
-        ('R', 'R'),
+        ('S', 'S'),
     )
+    image = models.ImageField(default='default.jpg', upload_to='movie_pics')
     title = models.CharField(max_length=256)
+    trailer = models.URLField(default='https://www.youtube.com/')
     description = models.TextField()
     cast = models.CharField(max_length=1024)
     duration_min = models.IntegerField()

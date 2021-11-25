@@ -18,6 +18,8 @@ from django.urls import path,include
 from users_profile import views as user_views
 from movies import views as mov_views
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -36,3 +38,5 @@ urlpatterns = [
     path('otp/<username>/<email>/',user_views.otp,name='otp'),
     path('validate_otp/',user_views.validate_otp,name='validate_otp')
     ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

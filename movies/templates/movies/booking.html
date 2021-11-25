@@ -2,6 +2,7 @@
 {% block content %}
     {% for movie in movies %}
         <article class="media content-section">
+            <img class="square article-img" src="{{ movie.image.url }}">
           <div class="media-body">
             <div class="article-metadata">
               <small class="text-muted" >Certification: {{ movie.certification_label }}</small>
@@ -10,6 +11,8 @@
             </div>
             <h2><a class="article-title" href="{% url 'screening' movie.title %}">{{ movie.title }}</a></h2>
             <p class="article-content">Plot: {{ movie.description }}</p>
+              <p class="article-content">
+                  <a class = "article-trailer" href="{{ movie.trailer }}"> Watch Trailer</a></p>
           </div>
         </article>
     {% endfor %}
