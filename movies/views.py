@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Movie, Screening
 from users_profile.models import Ticket
@@ -27,10 +27,18 @@ def ticket_booked(request, screen_pk):
         screen = Screening.objects.filter(pk=screen_pk).first()
         screen.available_seats -= int(no_of_seats)
         screen.save()
-        for i in range(int(no_of_seats)):
-            ticket = Ticket(user=user, screening=screen)
-            ticket.save()
-        context = {'tickets': Ticket.objects.filter(user=current_user)}
-    return render(request, 'users_profile/profile.html', context)
+        
+        ticket = Ticket(user=user, screening=screen,no_of_seats=no_of_seats,cost=int(screen.price)*int(no_of_seats))
+        ticket.save()
+        
+        context = {'ticket': ticket}
+        
+        return render(request,'movies/payment.html',context)
+    
+def booked_history(request):
+    current_user = request.user
+    context={"ticket": Ticket.objects.filter(username=current_user)}
+    return render(request,'users_profile/profile.html',context)
+
 
 

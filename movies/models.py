@@ -42,7 +42,7 @@ class Screening(models.Model):
     hall_name = models.CharField(max_length=32)
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
     theatre_id = models.ForeignKey(Theatre, on_delete=models.CASCADE)
-    available_seats = models.IntegerField()
+    available_seats = models.IntegerField(default=0)
     price=models.IntegerField(default=0)
 
     def __str__(self):

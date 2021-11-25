@@ -4,22 +4,23 @@
     <h1>
         {{ user.username }}
     </h1>
-    {% for ticket in tickets %}
+    
         <article class="media content-section">
           <div class="media-body">
             <div class="article-metadata">
-              <!-- <small class="text-muted">Duration: {{ ticket.screening.movie_id.title }}</small> -->
-              <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small>
-            
+              <!-- <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small> -->
+                <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small>
             </div>
             <h2><a class="article-title" href="{#}">
                 Title: {{ ticket.screening.movie_id.title }}</a></h2>
                 <p class="article-content">No of seats:{{ ticket.no_of_seats }}</p>
-                <p class="article-content">Cost: ₹{{ ticket.cost }}/-</p>
+                <p class="article-content">Total Cost: ₹{{ ticket.cost }}/-</p>
           </div>
           
         </article>
         
-    {% endfor %}
+   
     
-    {% endblock content %}
+    <button type="submit">Pay</button>
+    <button type="submit">Cancel</button>
+{% endblock content %}
