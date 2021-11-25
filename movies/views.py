@@ -5,7 +5,9 @@ from users_profile.models import Ticket
 from django.contrib.auth.models import User
 from users_profile import views as user_views
 from django.contrib import messages
-
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -37,8 +39,25 @@ def ticket_booked(request, screen_pk):
         return render(request,'movies/payment.html',context)
 
 def payment_status(request):
-    messages.success(request,f'Payment Done Successfully')
-    
+    current_user=request.user
+    us= User.objects.filter(username=current_user).first()
+    ticket=Ticket.objects.filter(user=us).last()
+    invoice_details={'movie':ticket.screening.movie_id.title,
+                      'duration':ticket.screening.movie_id.duration_min,
+                      'description':ticket.screening.movie_id.description,
+                      'theater':ticket.screening.theatre_id.name,
+                      'city':ticket.screening.theatre_id.city,
+                      'seats':ticket.no_of_seats,
+                      'cost':ticket.cost,
+                      'username':current_user
+                    }
+    email = us.email        
+    subject, from_email, to = 'Booking Confirmed', 'aduser.movie30@gmail.com', email
+    html_content = render_to_string('movies/invoice_mail.html',invoice_details)
+    msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()        
+    messages.success(request,f'Payment Done Successfully.\n Invoice sent to your registered email')
     return render(request,'movies/payment_done.html')
     
 def booked_history(request):

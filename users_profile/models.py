@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from movies.models import Screening
 
 
+
+
+
+
 class Ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     screening = models.ForeignKey(Screening, on_delete=models.CASCADE)

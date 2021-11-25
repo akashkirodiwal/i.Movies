@@ -9,4 +9,6 @@ class UserRegisterForm(UserCreationForm):
     
     class Meta:
         model = User
+        
         fields=['username','email','Age','password1','password2']
+        #fields = UserCreationForm.Meta.fields + ("Age",)
