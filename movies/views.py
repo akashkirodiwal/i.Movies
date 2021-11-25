@@ -4,6 +4,7 @@ from .models import Movie, Screening
 from users_profile.models import Ticket
 from django.contrib.auth.models import User
 from users_profile import views as user_views
+from django.contrib import messages
 
 
 # Create your views here.
@@ -34,6 +35,10 @@ def ticket_booked(request, screen_pk):
         context = {'ticket': ticket}
         
         return render(request,'movies/payment.html',context)
+
+def payment_status(request):
+    messages.success(request,f'Payment Done Successfully')
+    return render(request,'movies/payment_done.html')
     
 def booked_history(request):
     current_user = request.user
