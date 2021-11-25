@@ -16,7 +16,7 @@
                 Title: {{ ticket.screening.movie_id.title }}</a></h2>
                 <p class="article-content">No of seats:{{ ticket.no_of_seats }}</p>
                 <p class="article-content">Cost: ₹{{ ticket.cost }}/-</p>
-                <button><a href="{%url 'cancel' ticket.pk %}">Cancel</a></button>
+                <a href="{%url 'cancel' ticket.pk %}" class="btn btn-primary">Cancel</a>
           </div>
           
         </article>

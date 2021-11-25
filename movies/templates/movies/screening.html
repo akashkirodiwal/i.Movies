@@ -15,10 +15,10 @@
               {%csrf_token%}
               <label>Number of Seats Required:</label>
               <input type="number" name="no_of_seats" min="1" max={{ screen.available_seats }} step="1">
-              <input type="submit" class="btn-light border btn-sm"  value="Book Now">
+              <input type="submit" class="btn btn-primary"  value="Book Now">
 
 
-              <button><a href="#">Cancel</a></button>
+              <a href="{% url 'mov_booking'%}" class="btn btn-primary">Cancel</a>
 
 
 

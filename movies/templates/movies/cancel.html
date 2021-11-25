@@ -8,15 +8,15 @@
         </div>
         <h2>
             Title: {{ ticket.screening.movie_id.title }}</h2>
-        <p class="article-content">Cost: ₹{{ ticket.screening.cost }}/-</p>
+        <p class="article-content"> Cost: ₹{{ ticket.cost }}/-</p>
           <form action="{% url 'done_cancellation' ticket.pk %}" method="POST">
               {%csrf_token%}
-              <label>Number of Seats Required:</label>
+              <label>Number of Seats to Cancel:</label>
               <input type="number" name="ticket_cancel" min="1" max={{ ticket.no_of_seats }} step="1">
-              <input type="submit" class="btn-light border btn-sm"  value="Confirm Cancellation">
+              <input type="submit" class="btn btn-primary"  value="Confirm Cancellation">
 
 
-              <button><a href="#">Cancel</a></button>
+              <a href="{% url 'mov_booking'%}" class="btn btn-primary">Cancel</a>
       </div>
     </article>
 {% endblock content %}
