@@ -1,0 +1,192 @@
+Index: movies/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render\r\nfrom django.http import HttpResponse\r\nfrom .models import Movie, Screening\r\nfrom users_profile.models import Ticket\r\nfrom django.contrib.auth.models import User\r\nfrom users_profile import views as user_views\r\n\r\n\r\n# Create your views here.\r\n\r\n\r\ndef booking(request):\r\n    context = {'movies': Movie.objects.all()}\r\n    return render(request, 'movies/booking.html', context)\r\n\r\n\r\ndef movie_selected(request, movie_title):\r\n    context = {'screening': Screening.objects.filter(movie_id__title__contains=movie_title)}\r\n    return render(request, 'movies/screening.html', context)\r\n\r\n\r\ndef ticket_booked(request, screen_pk):\r\n    if request.method == 'POST':\r\n        no_of_seats = request.POST['no_of_seats']\r\n        current_user = request.user\r\n        user = User.objects.filter(username=current_user).first()\r\n        screen = Screening.objects.filter(pk=screen_pk).first()\r\n        screen.available_seats -= int(no_of_seats)\r\n        screen.save()\r\n        for i in range(int(no_of_seats)):\r\n            ticket = Ticket(user=user, screening=screen)\r\n            ticket.save()\r\n        context = {'tickets': Ticket.objects.filter(user=current_user)}\r\n    return render(request, 'users_profile/profile.html', context)\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/movies/views.py b/movies/views.py
+--- a/movies/views.py	(revision cf97efa06cbecd4ecc55092ed2c2605113e6a182)
++++ b/movies/views.py	(date 1637816481033)
+@@ -34,3 +34,19 @@
+     return render(request, 'users_profile/profile.html', context)
+ 
+ 
++def cancel(request, ticket_pk):
++    context = {'ticket': Ticket.objects.filter(pk=ticket_pk).first()}
++    return render(request, 'movies/cancel.html', context)
++
++
++def done_cancellation(request, ticket_pk):
++    if request.method == 'POST':
++        tickets_cancel = request.POST['ticket_cancel']
++        current_user = request.user
++        user = User.objects.filter(username=current_user).first()
++        ticket = Ticket.objects.filter(pk=ticket_pk).first()
++        ticket.no_of_seats += int(tickets_cancel)
++        ticket.screening.save()
++
++        context = {'tickets': Ticket.objects.filter(user=user)}
++    return render(request, 'users_profile/profile.html', context)
+Index: users_profile/templates/users_profile/profile.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends \"movies/base.html\" %}\r\n{% load crispy_forms_tags %}\r\n{% block content %}\r\n    <h1>\r\n        {{ user.username }}\r\n    </h1>\r\n    {% for ticket in tickets %}\r\n        <article class=\"media content-section\">\r\n          <div class=\"media-body\">\r\n            <div class=\"article-metadata\">\r\n              <small class=\"text-muted\">Duration: {{ ticket.screening.movie_id.duration_min }}</small>\r\n                <small class=\"text-muted\">Duration: {{ ticket.screening.movie_id.duration_min }}</small>\r\n            </div>\r\n            <h2><a class=\"article-title\" href=\"{#}\">\r\n                Title: {{ ticket.screening.movie_id.title }}</a></h2>\r\n            <p class=\"article-content\">Cost: ₹{{ ticket.screening.cost }}/-</p>\r\n          </div>\r\n        </article>\r\n    {% endfor %}\r\n\r\n{% endblock content %}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/users_profile/templates/users_profile/profile.html b/users_profile/templates/users_profile/profile.html
+--- a/users_profile/templates/users_profile/profile.html	(revision cf97efa06cbecd4ecc55092ed2c2605113e6a182)
++++ b/users_profile/templates/users_profile/profile.html	(date 1637814654479)
+@@ -14,6 +14,7 @@
+             <h2><a class="article-title" href="{#}">
+                 Title: {{ ticket.screening.movie_id.title }}</a></h2>
+             <p class="article-content">Cost: ₹{{ ticket.screening.cost }}/-</p>
++              <button><a href="{% url 'cancel' ticket.pk %}">Cancel Booking</a></button>
+           </div>
+         </article>
+     {% endfor %}
+Index: movies/templates/movies/cancel.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/movies/templates/movies/cancel.html b/movies/templates/movies/cancel.html
+new file mode 100644
+--- /dev/null	(date 1637816547769)
++++ b/movies/templates/movies/cancel.html	(date 1637816547769)
+@@ -0,0 +1,22 @@
++{% extends "movies/base.html" %}
++{% block content %}
++    <article class="media content-section">
++      <div class="media-body">
++        <div class="article-metadata">
++          <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small>
++            <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small>
++        </div>
++        <h2>
++            Title: {{ ticket.screening.movie_id.title }}</h2>
++        <p class="article-content">Cost: ₹{{ ticket.screening.cost }}/-</p>
++          <form action="{% url 'done_cancellation' screen.pk %}" method="POST">
++              {%csrf_token%}
++              <label>Number of Seats Required:</label>
++              <input type="number" name="no_of_seats" min="1" max={{ ticket. }} step="1">
++              <input type="submit" class="btn-light border btn-sm"  value="Book Now">
++
++
++              <button><a href="#">Cancel</a></button>
++      </div>
++    </article>
++{% endblock content %}
+Index: user_registration/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"user_registration URL Configuration\r\n\r\nThe `urlpatterns` list routes URLs to views. For more information please see:\r\n    https://docs.djangoproject.com/en/3.2/topics/http/urls/\r\nExamples:\r\nFunction views\r\n    1. Add an import:  from my_app import views\r\n    2. Add a URL to urlpatterns:  path('', views.home, name='home')\r\nClass-based views\r\n    1. Add an import:  from other_app.views import Home\r\n    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\r\nIncluding another URLconf\r\n    1. Import the include() function: from django.urls import include, path\r\n    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n\"\"\"\r\nfrom django.contrib import admin\r\nfrom django.urls import path,include\r\nfrom users_profile import views as user_views\r\nfrom movies import views as mov_views\r\nfrom django.contrib.auth import views as auth_views\r\n\r\n\r\nurlpatterns = [\r\n    path('admin/', admin.site.urls),\r\n    path('', include('users_profile.urls')),\r\n    path('profile/',user_views.profile,name='profile'),\r\n    path('login/',auth_views.LoginView.as_view(template_name='users_profile/login.html'),name='login'),\r\n    path('logout/',auth_views.LogoutView.as_view(template_name='users_profile/logout.html'),name='logout'),\r\n    path('register/',user_views.register,name='register'),\r\n    path('booking/',mov_views.booking,name='mov_booking'),\r\n    path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening'),\r\n    path(r'^booked/(?P<screen_pk>.+?)/$', mov_views.ticket_booked, name='finalbook'),\r\n    ]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/user_registration/urls.py b/user_registration/urls.py
+--- a/user_registration/urls.py	(revision cf97efa06cbecd4ecc55092ed2c2605113e6a182)
++++ b/user_registration/urls.py	(date 1637815310599)
+@@ -30,4 +30,5 @@
+     path('booking/',mov_views.booking,name='mov_booking'),
+     path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening'),
+     path(r'^booked/(?P<screen_pk>.+?)/$', mov_views.ticket_booked, name='finalbook'),
++    path(r'^cancel/(?P<ticket_pk>.+?)/$', mov_views.cancel, name='cancel'),
+     ]
+Index: users_profile/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from   django.urls import path\r\nfrom . import views\r\n\r\n\r\nurlpatterns = [\r\n    path('', views.home,name='booking-home'),\r\n    \r\n    ]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/users_profile/urls.py b/users_profile/urls.py
+--- a/users_profile/urls.py	(revision cf97efa06cbecd4ecc55092ed2c2605113e6a182)
++++ b/users_profile/urls.py	(date 1637773460781)
+@@ -1,8 +1,7 @@
+-from   django.urls import path
++from django.urls import path
+ from . import views
+ 
+-
+ urlpatterns = [
+-    path('', views.home,name='booking-home'),
+-    
+-    ]
++    path('', views.home, name='booking-home'),
++
++]
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"89248ad0-3a7d-4d1c-8e44-eff99b6606ea\" name=\"Changes\" comment=\"added ticket history and booking facility partially\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/db.sqlite3\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/db.sqlite3\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/movies/views.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/movies/views.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"21M4N1zUt6yhFQdkHNLRy2aC4JX\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"SHARE_PROJECT_CONFIGURATION_FILES\" value=\"true\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$/../pythonProject4\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable\" />\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"89248ad0-3a7d-4d1c-8e44-eff99b6606ea\" name=\"Changes\" comment=\"\" />\r\n      <created>1637737580948</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1637737580948</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"added ticket history and booking facility partially\">\r\n      <created>1637762152690</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1637762152690</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"added ticket history and booking facility partially\">\r\n      <created>1637762190844</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1637762190844</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"added ticket history and booking facility partially\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"added ticket history and booking facility partially\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision cf97efa06cbecd4ecc55092ed2c2605113e6a182)
++++ b/.idea/workspace.xml	(date 1637815908397)
+@@ -4,16 +4,26 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="89248ad0-3a7d-4d1c-8e44-eff99b6606ea" name="Changes" comment="added ticket history and booking facility partially">
++    <list default="true" id="89248ad0-3a7d-4d1c-8e44-eff99b6606ea" name="Changes" comment="added ticket history and booking facility completely done">
++      <change afterPath="$PROJECT_DIR$/movies/templates/movies/cancel.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/movies/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/movies/views.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/user_registration/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/user_registration/urls.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/users_profile/templates/users_profile/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/users_profile/templates/users_profile/profile.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/users_profile/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/users_profile/urls.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="HTML File" />
++      </list>
++    </option>
++  </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+@@ -24,6 +34,7 @@
+   </component>
+   <component name="PropertiesComponent">
+     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
++    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+@@ -53,7 +64,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1637762190844</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="added ticket history and booking facility completely done">
++      <created>1637763764500</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1637763764500</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -70,6 +88,7 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="added ticket history and booking facility partially" />
+-    <option name="LAST_COMMIT_MESSAGE" value="added ticket history and booking facility partially" />
++    <MESSAGE value="added ticket history and booking facility completely done" />
++    <option name="LAST_COMMIT_MESSAGE" value="added ticket history and booking facility completely done" />
+   </component>
+ </project>
+\ No newline at end of file
