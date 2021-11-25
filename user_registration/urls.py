@@ -30,4 +30,6 @@ urlpatterns = [
     path('booking/',mov_views.booking,name='mov_booking'),
     path(r'^screening/(?P<movie_title>.+)/$', mov_views.movie_selected, name='screening'),
     path(r'^booked/(?P<screen_pk>.+?)/$', mov_views.ticket_booked, name='finalbook'),
+    path('otp/<username>/<email>/',user_views.otp,name='otp'),
+    path('validate_otp/',user_views.validate_otp,name='validate_otp')
     ]
