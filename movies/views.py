@@ -58,6 +58,7 @@ def done_cancellation(request, ticket_pk):
         user = User.objects.filter(username=current_user).first()
         ticket = Ticket.objects.filter(pk=ticket_pk).first()
         ticket.no_of_seats -= int(tickets_cancel)
+        ticket.cost = int(ticket.screening.price)*int(ticket.no_of_seats)
         ticket.screening.available_seats += int(tickets_cancel)
         ticket.screening.save()
         ticket.save()
