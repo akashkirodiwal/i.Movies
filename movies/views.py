@@ -38,6 +38,7 @@ def ticket_booked(request, screen_pk):
 
 def payment_status(request):
     messages.success(request,f'Payment Done Successfully')
+    
     return render(request,'movies/payment_done.html')
     
 def booked_history(request):
