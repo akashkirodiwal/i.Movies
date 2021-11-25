@@ -106,6 +106,7 @@ def done_cancellation(request, ticket_pk):
         messages.success(request, f'Ticket has been Cancelled!!')
         ticket.no_of_seats -= int(tickets_cancel)
         ticket.screening.available_seats += int(tickets_cancel)
+        ticket.cost=int(ticket.no_of_seats)*int(ticket.screening.price)
         ticket.screening.save()
         ticket.save()
 

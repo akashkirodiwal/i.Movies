@@ -12,7 +12,7 @@
             <h2><a class="article-title" href="{% url 'screening' movie.title %}">{{ movie.title }}</a></h2>
             <p class="article-content">Plot: {{ movie.description }}</p>
               <p class="article-content">
-                  <a class = "article-trailer" href="{{ movie.trailer }}"> Watch Trailer</a></p>
+                  <a class = "article-trailer" href="{{ movie.trailer }}" target="_blank"> Watch Trailer</a></p>
           </div>
         </article>
     {% endfor %}
