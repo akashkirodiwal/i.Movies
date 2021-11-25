@@ -34,5 +34,23 @@ urlpatterns = [
     path(r'^cancel/(?P<ticket_pk>.+?)/$', mov_views.cancel, name='cancel'),
     path(r'^done_cancellation/(?P<ticket_pk>.+?)/$', mov_views.done_cancellation, name='done_cancellation'),
     path('otp/<username>/<email>/',user_views.otp,name='otp'),
-    path('validate_otp/',user_views.validate_otp,name='validate_otp')
-    ]
+    path('validate_otp/',user_views.validate_otp,name='validate_otp'),
+    path('password-reset/',
+         auth_views.PasswordResetView.as_view(
+             template_name='users_profile/password_reset.html'),
+         name='password_reset'),
+    path('password-reset/done/',
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='users_profile/password_reset_done.html'),
+         name='password_reset_done'),
+    
+    path('password-reset-confirm/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(
+             template_name='users_profile/password_reset_confirm.html'),
+        name='password_reset_confirm'),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(
+             template_name='users_profile/password_reset_complete.html'
+         ),
+         name='password_reset_complete'),        
+            ]
