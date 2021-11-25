@@ -10,7 +10,15 @@
             Welcome to i.Movies Booking 
         </center>
     </h1>
-    
+    <div class="col-md-8">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %} 
+    </div>
     <body>
         
         <img src="https://resize.indiatvnews.com/en/resize/newbucket/1200_-/2020/07/cinema-halls-rep1-1595657539.jpg" 

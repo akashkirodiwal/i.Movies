@@ -94,7 +94,7 @@ def done_cancellation(request, ticket_pk):
         msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
-
+        messages.success(request,f'Ticket has been Cancelled!!')
         ticket.no_of_seats -= int(tickets_cancel)
         ticket.screening.available_seats += int(tickets_cancel)
         ticket.screening.save()
@@ -103,5 +103,6 @@ def done_cancellation(request, ticket_pk):
         if ticket.no_of_seats == 0:
             ticket.delete()
         context = {'tickets': Ticket.objects.filter(user=user)}
-    return render(request, 'users_profile/profile.html', context)
+        
+    return render(request, 'users_profile/home.html', context)
 
