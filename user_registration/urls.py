@@ -32,4 +32,6 @@ urlpatterns = [
     path(r'^booked/(?P<screen_pk>.+?)/$', mov_views.ticket_booked, name='finalbook'),
     path(r'^cancel/(?P<ticket_pk>.+?)/$', mov_views.cancel, name='cancel'),
     path(r'^done_cancellation/(?P<ticket_pk>.+?)/$', mov_views.done_cancellation, name='done_cancellation'),
+    path('otp/<username>/<email>/',user_views.otp,name='otp'),
+    path('validate_otp/',user_views.validate_otp,name='validate_otp'),
     ]
