@@ -5,7 +5,8 @@
           <div class="media-body">
             <div class="article-metadata">
               <small class="text-muted" >Certification: {{ movie.certification_label }}</small>
-              <small class="text-muted">Duration: {{ movie.duration_min }}</small>
+              <small class="text-muted">Duration: {{ movie.duration_min }} minutes</small>
+              <!-- <small class="text-muted">Time: {{ movie.duration_min }}</small> -->
             </div>
             <h2><a class="article-title" href="{% url 'screening' movie.title %}">{{ movie.title }}</a></h2>
             <p class="article-content">Plot: {{ movie.description }}</p>

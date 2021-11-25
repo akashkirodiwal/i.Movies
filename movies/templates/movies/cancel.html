@@ -4,11 +4,12 @@
       <div class="media-body">
         <div class="article-metadata">
           <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small>
-            <small class="text-muted">Duration: {{ ticket.screening.movie_id.duration_min }}</small>
+            <small class="text-muted">Date & Time: {{ ticket.screening.time }}</small>
         </div>
         <h2>
             Title: {{ ticket.screening.movie_id.title }}</h2>
         <p class="article-content">Cost: ₹{{ ticket.screening.price }}/- per seat </p>
+        <p class="article-content">Booking Date & Time: {{ ticket.booking_time }} </p>
           <form action="{% url 'done_cancellation' ticket.pk %}" method="POST">
               {%csrf_token%}
               <label>Number of Seats Required:</label>

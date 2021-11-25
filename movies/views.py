@@ -19,6 +19,7 @@ def booking(request):
 
 def movie_selected(request, movie_title):
     context = {'screening': Screening.objects.filter(movie_id__title__contains=movie_title)}
+    
     return render(request, 'movies/screening.html', context)
 
 
@@ -49,7 +50,8 @@ def payment_status(request):
                       'city':ticket.screening.theatre_id.city,
                       'seats':ticket.no_of_seats,
                       'cost':ticket.cost,
-                      'username':current_user
+                      'username':current_user,
+                      "Date_and_Time":ticket.screening.time
                     }
     email = us.email        
     subject, from_email, to = 'Booking Confirmed', 'aduser.movie30@gmail.com', email
@@ -77,11 +79,27 @@ def done_cancellation(request, ticket_pk):
         current_user = request.user
         user = User.objects.filter(username=current_user).first()
         ticket = Ticket.objects.filter(pk=ticket_pk).first()
+        ##cancelling Email
+        invoice_details={'movie':ticket.screening.movie_id.title,
+                      'duration':ticket.screening.movie_id.duration_min,
+                      'description':ticket.screening.movie_id.description,
+                      'theater':ticket.screening.theatre_id.name,
+                      'city':ticket.screening.theatre_id.city,
+                      'seats':int(tickets_cancel),
+                      'username':user
+                    }
+        email = user.email        
+        subject, from_email, to = 'Booking Cancelled', 'aduser.movie30@gmail.com', email
+        html_content = render_to_string('movies/cancel_mail.html',invoice_details)
+        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
         ticket.no_of_seats -= int(tickets_cancel)
-        ticket.cost = int(ticket.screening.price)*int(ticket.no_of_seats)
         ticket.screening.available_seats += int(tickets_cancel)
         ticket.screening.save()
         ticket.save()
+
         if ticket.no_of_seats == 0:
             ticket.delete()
         context = {'tickets': Ticket.objects.filter(user=user)}

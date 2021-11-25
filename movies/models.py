@@ -44,6 +44,7 @@ class Screening(models.Model):
     theatre_id = models.ForeignKey(Theatre, on_delete=models.CASCADE)
     available_seats = models.IntegerField(default=0)
     price=models.IntegerField(default=0)
-
+    time=models.DateTimeField(auto_now=False)
+    
     def __str__(self):
         return self.theatre_id.name + ' - ' +' - '+ self.movie_id.title + ' - ' + self.hall_name + ' - ' +str(self.price)

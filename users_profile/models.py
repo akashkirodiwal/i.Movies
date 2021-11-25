@@ -12,7 +12,7 @@ class Ticket(models.Model):
     screening = models.ForeignKey(Screening, on_delete=models.CASCADE)
     no_of_seats=models.IntegerField(default=0)
     cost=models.IntegerField(default=0)
-
+    booking_time=models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.screening.theatre_id.name + ' - ' + self.screening.hall_name + ' - ' +str(self.screening.price) + ' - '+ str(self.no_of_seats)
 

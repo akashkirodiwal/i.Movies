@@ -10,7 +10,7 @@
             <p class="article-content">Available Seats: {{ screen.available_seats }}</p>
             <p class="article-content">Theatre: {{ screen.theatre_id }}</p>
             <p class="article-content">Price: ₹{{ screen.price }}/- per seat</p>
-            
+            <p class="article-content">Time: {{ screen.time }}</p>
             <form action="{% url 'finalbook' screen.pk %}" method="POST">
               {%csrf_token%}
               <label>Number of Seats Required:</label>
