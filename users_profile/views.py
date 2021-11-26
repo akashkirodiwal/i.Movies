@@ -70,3 +70,4 @@ def profile(request):
         if ticket.no_of_seats == 0:
             ticket.delete()
     return render(request,'users_profile/profile.html', context)
+

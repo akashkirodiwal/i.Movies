@@ -14,6 +14,8 @@ class Ticket(models.Model):
     cost=models.IntegerField(default=0)
     booking_time=models.DateTimeField(auto_now=True)
     def __str__(self):
-        return self.screening.theatre_id.name + ' - ' + self.screening.hall_name + ' - ' +str(self.screening.price) + ' - '+ str(self.no_of_seats)
+        return self.user.username + " - "+ self.screening.movie_id.title+" - "\
+        +self.screening.theatre_id.name + ' - ' + self.screening.hall_name + ' - ' \
+        +str(self.screening.price) + ' - '+ str(self.no_of_seats)
 
 User._meta.get_field('email')._unique = True
